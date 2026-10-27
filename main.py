@@ -31,6 +31,7 @@ def show_menu():
     print("\n=== Electricity Consumption Calculator ===")
     print("1. Add appliance")
     print("2. View appliances")
+    print("3. Monthly consumption summary")
     print("0. Exit")
 
 def view_appliances(appliances):
@@ -48,6 +49,32 @@ def view_appliances(appliances):
         print("--------------------")
 
 
+def show_consumption_summary(appliances, price_per_kwh):
+    """Display monthly consumption and costs for all appliances."""
+    if not appliances:
+        print("No appliances added yet.")
+        return
+
+    total_consumption = 0
+    total_cost = 0
+
+    print("\n=== Monthly Consumption Summary ===")
+
+    for appliance in appliances:
+        consumption = calculate_consumption_for_days(
+            appliance["power"], appliance["hours"], 30
+        )
+        cost = consumption * price_per_kwh
+
+        print(f"{appliance['name']}: {consumption:.2f} kWh, {cost:.2f}")
+
+        total_consumption += consumption
+        total_cost += cost
+
+    print("--------------------")
+    print(f"Total consumption: {total_consumption:.2f} kWh")
+    print(f"Total monthly cost: {total_cost:.2f}")
+
 def main():
     """Run the electricity calculator menu."""
     appliances = []
@@ -61,6 +88,14 @@ def main():
 
         elif choice == "2":
             view_appliances(appliances)
+
+        elif choice == "3":
+            if appliances:
+                price = float(input("Enter electricity price per kWh: "))
+                show_consumption_summary(appliances, price)
+            else:
+                print("No appliances added yet.")
+
 
         elif choice == "0":
             print("Goodbye!")
