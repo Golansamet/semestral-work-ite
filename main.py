@@ -2,12 +2,12 @@
 """Main entry point for the Electricity Consumption Calculator."""
 
 
+
 from src.calculator import (
-    calculate_daily_consumption,
-    calculate_daily_cost,
     calculate_consumption_for_days,
     calculate_cost_for_days,
 )
+
 
 
 
@@ -84,9 +84,11 @@ def rank_appliances(appliances, price_per_kwh):
 
     ranked = sorted(
         appliances,
-        key=lambda appliance: calculate_cost_for_days(
-            appliance["power"], appliance["hours"], price_per_kwh, 30
+
+        key=lambda item: calculate_cost_for_days(
+            item["power"], item["hours"], price_per_kwh, 30
         ),
+
         reverse=True
     )
 
