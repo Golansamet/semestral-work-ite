@@ -11,30 +11,64 @@ from src.calculator import (
 
 
 
-def main():
-    """Run the electricity calculator."""
-    print("=== Electricity Consumption Calculator ===")
-
+def add_appliance(appliances):
+    """Add a new appliance to the list."""
+    name = input("Enter appliance name: ")
     power = float(input("Enter appliance power (W): "))
     hours = float(input("Enter daily usage (hours): "))
-    price = float(input("Enter electricity price per kWh: "))
 
-    consumption = calculate_daily_consumption(power, hours)
-    cost = calculate_daily_cost(power, hours, price)
+    appliance = {
+        "name": name,
+        "power": power,
+        "hours": hours
+    }
 
-    print(f"\nDaily consumption: {consumption:.2f} kWh")
-    print(f"Daily cost: {cost:.2f}")
+    appliances.append(appliance)
+    print(f"{name} added successfully!")
 
-    monthly_consumption = calculate_consumption_for_days(power, hours, 30)
-    yearly_consumption = calculate_consumption_for_days(power, hours, 365)
+def show_menu():
+    """Display the main menu."""
+    print("\n=== Electricity Consumption Calculator ===")
+    print("1. Add appliance")
+    print("2. View appliances")
+    print("0. Exit")
 
-    monthly_cost = calculate_cost_for_days(power, hours, price, 30)
-    yearly_cost = calculate_cost_for_days(power, hours, price, 365)
+def view_appliances(appliances):
+    """Display all appliances in the list."""
+    if not appliances:
+        print("No appliances added yet.")
+        return
 
-    print(f"\nMonthly consumption: {monthly_consumption:.2f} kWh")
-    print(f"Monthly cost: {monthly_cost:.2f}")
-    print(f"\nYearly consumption: {yearly_consumption:.2f} kWh")
-    print(f"Yearly cost: {yearly_cost:.2f}")
+    print("\n=== Your Appliances ===")
+
+    for appliance in appliances:
+        print(f"Name: {appliance['name']}")
+        print(f"Power: {appliance['power']} W")
+        print(f"Daily usage: {appliance['hours']} hours")
+        print("--------------------")
+
+
+def main():
+    """Run the electricity calculator menu."""
+    appliances = []
+
+    while True:
+        show_menu()
+        choice = input("Select option: ")
+
+        if choice == "1":
+            add_appliance(appliances)
+
+        elif choice == "2":
+            view_appliances(appliances)
+
+        elif choice == "0":
+            print("Goodbye!")
+            break
+
+        else:
+            print("Invalid option. Please try again.")
+
 
 
 if __name__ == "__main__":
