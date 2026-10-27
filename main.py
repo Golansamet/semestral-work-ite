@@ -32,6 +32,7 @@ def show_menu():
     print("1. Add appliance")
     print("2. View appliances")
     print("3. Monthly consumption summary")
+    print("4. Rank appliances by monthly cost")
     print("0. Exit")
 
 def view_appliances(appliances):
@@ -75,6 +76,28 @@ def show_consumption_summary(appliances, price_per_kwh):
     print(f"Total consumption: {total_consumption:.2f} kWh")
     print(f"Total monthly cost: {total_cost:.2f}")
 
+def rank_appliances(appliances, price_per_kwh):
+    """Display appliances ranked by monthly electricity cost."""
+    if not appliances:
+        print("No appliances added yet.")
+        return
+
+    ranked = sorted(
+        appliances,
+        key=lambda appliance: calculate_cost_for_days(
+            appliance["power"], appliance["hours"], price_per_kwh, 30
+        ),
+        reverse=True
+    )
+
+    print("\n=== Appliances Ranked by Monthly Cost ===")
+
+    for appliance in ranked:
+        cost = calculate_cost_for_days(
+            appliance["power"], appliance["hours"], price_per_kwh, 30
+        )
+        print(f"{appliance['name']}: {cost:.2f}")
+
 def main():
     """Run the electricity calculator menu."""
     appliances = []
@@ -96,6 +119,13 @@ def main():
             else:
                 print("No appliances added yet.")
 
+
+        elif choice == "4":
+            if appliances:
+                price = float(input("Enter electricity price per kWh: "))
+                rank_appliances(appliances, price)
+            else:
+                print("No appliances added yet.")
 
         elif choice == "0":
             print("Goodbye!")
