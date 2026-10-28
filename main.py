@@ -33,6 +33,7 @@ def show_menu():
     print("2. View appliances")
     print("3. Monthly consumption summary")
     print("4. Rank appliances by monthly cost")
+    print("5. Compare two appliances")
     print("0. Exit")
 
 def view_appliances(appliances):
@@ -100,6 +101,19 @@ def rank_appliances(appliances, price_per_kwh):
         )
         print(f"{appliance['name']}: {cost:.2f}")
 
+def compare_appliances(first, second, price_per_kwh):
+    """Compare the monthly electricity costs of two appliances."""
+    first_cost = calculate_cost_for_days(
+        first["power"], first["hours"], price_per_kwh, 30
+    )
+    second_cost = calculate_cost_for_days(
+        second["power"], second["hours"], price_per_kwh, 30
+    )
+
+    print(f"\n{first['name']}: {first_cost:.2f}")
+    print(f"{second['name']}: {second_cost:.2f}")
+    print(f"Monthly cost difference: {abs(first_cost - second_cost):.2f}")
+
 def main():
     """Run the electricity calculator menu."""
     appliances = []
@@ -128,6 +142,24 @@ def main():
                 rank_appliances(appliances, price)
             else:
                 print("No appliances added yet.")
+
+
+        elif choice == "5":
+            if len(appliances) < 2:
+                print("Please add at least two appliances.")
+            else:
+                for i, appliance in enumerate(appliances, start=1):
+                    print(f"{i}. {appliance['name']}")
+
+                first_index = int(input("Select first appliance: ")) - 1
+                second_index = int(input("Select second appliance: ")) - 1
+                price = float(input("Enter electricity price per kWh: "))
+
+                compare_appliances(
+                    appliances[first_index],
+                    appliances[second_index],
+                    price
+                )
 
         elif choice == "0":
             print("Goodbye!")
