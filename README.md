@@ -11,11 +11,12 @@ A Python command-line application that helps users estimate electricity consumpt
 - Calculate total monthly electricity consumption and cost.
 - Rank appliances by monthly electricity cost.
 - Navigate through an interactive command-line menu.
+- Compare monthly electricity costs between two appliances.
+- Estimate potential monthly savings by reducing daily appliance usage.
+
 
 ## Planned Features
 
-- Compare electricity costs between appliances.
-- Estimate potential savings by reducing daily usage.
 - Retrieve the latest available electricity prices by country using the Eurostat API.
 - Improve input validation and error handling.
 
