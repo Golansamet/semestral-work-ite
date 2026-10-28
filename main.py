@@ -34,6 +34,7 @@ def show_menu():
     print("3. Monthly consumption summary")
     print("4. Rank appliances by monthly cost")
     print("5. Compare two appliances")
+    print("6. Calculate potential savings")
     print("0. Exit")
 
 def view_appliances(appliances):
@@ -114,6 +115,17 @@ def compare_appliances(first, second, price_per_kwh):
     print(f"{second['name']}: {second_cost:.2f}")
     print(f"Monthly cost difference: {abs(first_cost - second_cost):.2f}")
 
+def calculate_savings(power_watts, current_hours, new_hours, price_per_kwh):
+    """Calculate monthly savings from reducing daily appliance usage."""
+    current_cost = calculate_cost_for_days(
+        power_watts, current_hours, price_per_kwh, 30
+    )
+    new_cost = calculate_cost_for_days(
+        power_watts, new_hours, price_per_kwh, 30
+    )
+
+    return current_cost - new_cost
+
 def main():
     """Run the electricity calculator menu."""
     appliances = []
@@ -160,6 +172,28 @@ def main():
                     appliances[second_index],
                     price
                 )
+
+        elif choice == "6":
+            if not appliances:
+                print("No appliances added yet.")
+            else:
+                for i, appliance in enumerate(appliances, start=1):
+                    print(f"{i}. {appliance['name']}")
+
+                index = int(input("Select appliance: ")) - 1
+                selected = appliances[index]
+
+                new_hours = float(input("Enter new daily usage (hours): "))
+                price = float(input("Enter electricity price per kWh: "))
+
+                savings = calculate_savings(
+                    selected["power"],
+                    selected["hours"],
+                    new_hours,
+                    price
+                )
+
+                print(f"Potential monthly savings: {savings:.2f}")
 
         elif choice == "0":
             print("Goodbye!")
