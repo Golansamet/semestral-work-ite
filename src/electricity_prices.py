@@ -6,7 +6,7 @@ import requests
 URL = "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_204"
 
 
-def get_electricity_price(country_code):
+def get_electricity_price(country_code: str) -> tuple[float | None, str | None]:
     """Get the latest available household electricity price."""
 
     params = {
@@ -33,7 +33,7 @@ def get_electricity_price(country_code):
         price = values.get(str(index))
 
         if price is not None:
-            return price, period
+            return float(price), period
 
     return None, None
 

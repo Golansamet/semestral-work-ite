@@ -9,6 +9,8 @@ from src.calculator import (
 )
 
 
+from src.electricity_prices import get_electricity_price
+
 
 
 def add_appliance(appliances):
@@ -35,6 +37,7 @@ def show_menu():
     print("4. Rank appliances by monthly cost")
     print("5. Compare two appliances")
     print("6. Calculate potential savings")
+    print("7. Select country and retrieve electricity price")
     print("0. Exit")
 
 def view_appliances(appliances):
@@ -126,9 +129,42 @@ def calculate_savings(power_watts, current_hours, new_hours, price_per_kwh):
 
     return current_cost - new_cost
 
+def select_country():
+    """Let the user select a country and retrieve its electricity price."""
+    countries = {
+        "1": ("Czech Republic", "CZ"),
+        "2": ("Germany", "DE"),
+        "3": ("France", "FR")
+    }
+
+    print("\n=== Select Country ===")
+    for number, (name, code) in countries.items():
+        print(f"{number}. {name}")
+
+    choice = input("Select country: ")
+
+    if choice not in countries:
+        print("Invalid country selection.")
+        return None
+
+    name, code = countries[choice]
+    price, period = get_electricity_price(code)
+
+    if price is None:
+        print("No electricity price available.")
+        return None
+
+    print(f"\nCountry: {name}")
+    print(f"Electricity price: {price:.4f} EUR/kWh")
+    print(f"Data period: {period}")
+
+    return price
+
 def main():
     """Run the electricity calculator menu."""
     appliances = []
+    price_per_kwh = None
+
 
     while True:
         show_menu()
@@ -142,7 +178,13 @@ def main():
 
         elif choice == "3":
             if appliances:
-                price = float(input("Enter electricity price per kWh: "))
+
+                if price_per_kwh is not None:
+                    price = price_per_kwh
+                    print(f"Using selected country price: {float(price):.4f} EUR/kWh")
+                else:
+                    price = float(input("Enter electricity price per kWh: "))
+
                 show_consumption_summary(appliances, price)
             else:
                 print("No appliances added yet.")
@@ -150,7 +192,13 @@ def main():
 
         elif choice == "4":
             if appliances:
-                price = float(input("Enter electricity price per kWh: "))
+
+                if price_per_kwh is not None:
+                    price = price_per_kwh
+                    print(f"Using selected country price: {float(price):.4f} EUR/kWh")
+                else:
+                    price = float(input("Enter electricity price per kWh: "))
+
                 rank_appliances(appliances, price)
             else:
                 print("No appliances added yet.")
@@ -165,7 +213,12 @@ def main():
 
                 first_index = int(input("Select first appliance: ")) - 1
                 second_index = int(input("Select second appliance: ")) - 1
-                price = float(input("Enter electricity price per kWh: "))
+
+                if price_per_kwh is not None:
+                    price: float = price_per_kwh
+                    print(f"Using selected country price: {price:.4f} EUR/kWh")
+                else:
+                    price = float(input("Enter electricity price per kWh: "))
 
                 compare_appliances(
                     appliances[first_index],
@@ -184,7 +237,13 @@ def main():
                 selected = appliances[index]
 
                 new_hours = float(input("Enter new daily usage (hours): "))
-                price = float(input("Enter electricity price per kWh: "))
+
+                if price_per_kwh is not None:
+                    price = price_per_kwh
+                    print(f"Using selected country price: {float(price):.4f} EUR/kWh")
+                else:
+                    price = float(input("Enter electricity price per kWh: "))
+
 
                 savings = calculate_savings(
                     selected["power"],
@@ -194,6 +253,11 @@ def main():
                 )
 
                 print(f"Potential monthly savings: {savings:.2f}")
+
+        elif choice == "7":
+            selected_price = select_country()
+            if selected_price is not None:
+                price_per_kwh = selected_price
 
         elif choice == "0":
             print("Goodbye!")
