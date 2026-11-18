@@ -171,6 +171,20 @@ def select_country():
 
     return price
 
+def get_manual_price():
+    """Read and validate a manual electricity price."""
+    try:
+        price = float(input("Enter electricity price per kWh: "))
+    except ValueError:
+        print("Invalid price! Please enter a number.")
+        return None
+
+    if not 0 <= price < float("inf"):
+        print("Invalid price! Please enter a valid non-negative number.")
+        return None
+
+    return price
+
 def main():
     """Run the electricity calculator menu."""
     appliances = []
@@ -194,7 +208,10 @@ def main():
                     price = price_per_kwh
                     print(f"Using selected country price: {float(price):.4f} EUR/kWh")
                 else:
-                    price = float(input("Enter electricity price per kWh: "))
+
+                    price = get_manual_price()
+                    if price is None:
+                        continue
 
                 show_consumption_summary(appliances, price)
             else:
@@ -208,7 +225,10 @@ def main():
                     price = price_per_kwh
                     print(f"Using selected country price: {float(price):.4f} EUR/kWh")
                 else:
-                    price = float(input("Enter electricity price per kWh: "))
+
+                    price = get_manual_price()
+                    if price is None:
+                        continue
 
                 rank_appliances(appliances, price)
             else:
@@ -222,14 +242,26 @@ def main():
                 for i, appliance in enumerate(appliances, start=1):
                     print(f"{i}. {appliance['name']}")
 
-                first_index = int(input("Select first appliance: ")) - 1
-                second_index = int(input("Select second appliance: ")) - 1
+                try:
+                    first_index = int(input("Select first appliance: ")) - 1
+                    second_index = int(input("Select second appliance: ")) - 1
+                except ValueError:
+                    print("Invalid selection! Please enter a number.")
+                    continue
+
+                if not (0 <= first_index < len(appliances) and
+                        0 <= second_index < len(appliances)):
+                    print("Invalid appliance number.")
+                    continue
 
                 if price_per_kwh is not None:
                     price: float = price_per_kwh
                     print(f"Using selected country price: {price:.4f} EUR/kWh")
                 else:
-                    price = float(input("Enter electricity price per kWh: "))
+
+                    price = get_manual_price()
+                    if price is None:
+                        continue
 
                 compare_appliances(
                     appliances[first_index],
@@ -244,17 +276,40 @@ def main():
                 for i, appliance in enumerate(appliances, start=1):
                     print(f"{i}. {appliance['name']}")
 
-                index = int(input("Select appliance: ")) - 1
+                try:
+                    index = int(input("Select appliance: ")) - 1
+                except ValueError:
+                    print("Invalid selection! Please enter a number.")
+                    continue
+
+                if not 0 <= index < len(appliances):
+                    print("Invalid appliance number.")
+                    continue
+
                 selected = appliances[index]
 
-                new_hours = float(input("Enter new daily usage (hours): "))
+                try:
+                    new_hours = float(input("Enter new daily usage (hours): "))
+                except ValueError:
+                    print("Invalid hours! Please enter a number.")
+                    continue
+
+                if not 0 <= new_hours <= 24:
+                    print("Invalid hours! Enter a value between 0 and 24.")
+                    continue
+
+                if new_hours > selected["hours"]:
+                    print("New usage must not exceed current usage for savings.")
+                    continue
 
                 if price_per_kwh is not None:
                     price = price_per_kwh
                     print(f"Using selected country price: {float(price):.4f} EUR/kWh")
                 else:
-                    price = float(input("Enter electricity price per kWh: "))
 
+                    price = get_manual_price()
+                    if price is None:
+                        continue
 
                 savings = calculate_savings(
                     selected["power"],
