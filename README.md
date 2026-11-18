@@ -1,3 +1,4 @@
+
 # Electricity Consumption Calculator
 
 A Python command-line application that helps users estimate electricity consumption and costs for household appliances, compare appliances, and explore potential energy savings.
@@ -16,12 +17,22 @@ A Python command-line application that helps users estimate electricity consumpt
 - Display the reporting period of retrieved electricity prices.
 - Allow manual electricity price entry when no country has been selected.
 - Navigate through an interactive command-line menu.
+- Validate appliance input, including non-empty names, numeric values, positive power, and daily usage between 0 and 24 hours.
+- Handle invalid appliance input without crashing the application.
+- Run automated calculation tests using pytest.
 
-## Planned Features
+## Automated Tests
 
-- Improve input validation and error handling.
-- Add automated tests for calculations and API integration.
-- Improve documentation and add project diagrams.
+The project includes four automated tests using pytest.
+
+The tests cover:
+
+1. Monthly electricity consumption calculation.
+2. Monthly electricity cost calculation.
+3. Zero daily usage.
+4. Yearly electricity consumption calculation.
+
+All four tests have passed successfully.
 
 ## Inputs
 
@@ -51,6 +62,28 @@ A Python command-line application that helps users estimate electricity consumpt
 
 6. Follow the interactive menu to add appliances, view consumption summaries, compare appliances, calculate potential savings, or retrieve electricity prices.
 
+## Running Automated Tests
+
+Install pytest:
+
+```bash
+python -m pip install pytest
+```
+
+Run all automated tests from the project directory:
+
+```bash
+python -m pytest -v
+```
+
+The tests are located in:
+
+```text
+tests/test_calculator.py
+```
+
+The current test suite contains four tests, all of which have passed successfully.
+
 ## Electricity Price Data
 
 Electricity prices are retrieved from the Eurostat dataset `nrg_pc_204`.
@@ -65,6 +98,26 @@ The data represents household electricity prices in EUR/kWh, including taxes, fo
 
 Eurostat publishes these prices periodically. They are statistical reference prices rather than real-time electricity tariffs or personalized electricity bills.
 
+## Project Structure
+
+```text
+semestral-work-ite/
+├── src/
+│   ├── calculator.py
+│   └── electricity_prices.py
+├── tests/
+│   └── test_calculator.py
+├── .gitignore
+├── main.py
+└── README.md
+```
+
+- `main.py` — Interactive command-line menu and appliance management.
+- `src/calculator.py` — Electricity consumption and cost calculations.
+- `src/electricity_prices.py` — Eurostat API integration.
+- `tests/test_calculator.py` — Automated calculation tests.
+- `README.md` — Project documentation.
+
 ## Limitations
 
 - Eurostat prices are historical statistical data, not live supplier tariffs.
@@ -72,16 +125,35 @@ Eurostat publishes these prices periodically. They are statistical reference pri
 - Appliance data is stored in memory and is not saved after closing the application.
 - Monthly calculations assume 30 days.
 - Yearly calculations assume 365 days.
-- Input validation and error handling are not yet fully implemented.
+- Input validation has been implemented for adding appliances, but is not yet comprehensive across all menu options.
+- Automated tests currently cover calculation functions, not Eurostat API integration.
 - Electricity consumption estimates assume constant appliance power during the entered usage hours.
 - Costs calculated using Eurostat prices are expressed in EUR.
 
+## Planned Improvements
+
+- Extend input validation and error handling to additional menu options.
+- Add automated tests for Eurostat API integration.
+- Add a simple project architecture diagram.
+
 ## Project Status
 
-Development in progress.
+The core functionality has been implemented.
 
-The core electricity calculator, multiple-appliance management, consumption summaries, appliance ranking, appliance comparison, savings simulation, and Eurostat API integration have been implemented.
+Completed components include:
 
-Initial manual tests have been completed successfully.
+- Electricity consumption and cost calculator.
+- Multiple-appliance management.
+- Monthly consumption summaries.
+- Appliance ranking and comparison.
+- Potential savings simulation.
+- Eurostat API integration.
+- Input validation for adding appliances.
+- Four automated calculation tests using pytest.
+- Project documentation and GitHub version control.
 
-Automated tests, improved error handling, diagrams, and additional documentation are planned.
+Manual tests have been completed successfully, including retrieving electricity prices from Eurostat and handling invalid appliance input.
+
+All four automated calculation tests have passed.
+
+The project is undergoing final review and preparation for submission and presentation.
