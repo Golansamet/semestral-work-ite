@@ -15,9 +15,20 @@ from src.electricity_prices import get_electricity_price
 
 def add_appliance(appliances):
     """Add a new appliance to the list."""
-    name = input("Enter appliance name: ")
-    power = float(input("Enter appliance power (W): "))
-    hours = float(input("Enter daily usage (hours): "))
+
+    name = input("Enter appliance name: ").strip()
+
+    try:
+        power = float(input("Enter appliance power (W): "))
+        hours = float(input("Enter daily usage (hours): "))
+    except ValueError:
+        print("Invalid input! Please enter numbers.")
+        return
+
+    if not name or power <= 0 or not 0 <= hours <= 24:
+        print("Invalid input! Check name, power and hours (0-24).")
+        return
+
 
     appliance = {
         "name": name,
