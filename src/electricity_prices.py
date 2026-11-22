@@ -20,9 +20,12 @@ def get_electricity_price(country_code: str) -> tuple[float | None, str | None]:
         "lastTimePeriod": 4
     }
 
-    response = requests.get(URL, params=params, timeout=20)
-    response.raise_for_status()
-    data = response.json()
+    try:
+        response = requests.get(URL, params=params, timeout=20)
+        response.raise_for_status()
+        data = response.json()
+    except (requests.RequestException, ValueError):
+        return None, None
 
     periods = data["dimension"]["time"]["category"]["index"]
     values = data["value"]
