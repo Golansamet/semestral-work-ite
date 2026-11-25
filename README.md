@@ -5,7 +5,7 @@
 The project offers two ways to use the same calculation logic:
 
 - **Streamlit dashboard (`app.py`)** — a visual, single-page interface with summary cards, an appliance-cost chart, appliance management, an electricity-price selector, and a savings simulator.
-- **Command-line application (`main.py`)** — an interactive terminal menu with appliance rankings, two-appliance comparisons, and daily/monthly/yearly calculations.
+- **Command-line application (`main.py`)** — an interactive terminal menu for appliance management, monthly summaries, rankings, comparisons, savings estimates, and Eurostat price retrieval.
 
 Both interfaces support manually entered electricity prices and household electricity price data retrieved from the **Eurostat API**.
 
@@ -33,7 +33,7 @@ Users can identify appliances with higher estimated operating costs, compare con
 ### Command-line application
 
 - Add and view multiple household appliances.
-- Calculate electricity consumption in kWh and costs for different time periods.
+- Calculate monthly electricity consumption in kWh and estimated monthly costs.
 - Display total monthly consumption and cost.
 - Rank appliances by monthly electricity cost.
 - Compare the monthly costs of two appliances.
@@ -155,7 +155,7 @@ The diagram files are stored in `docs/diagrams/`.
 
 ### Requirements
 
-- Python 3
+- Python 3.10 or newer (tested locally with Python 3.12)
 - Packages listed in `requirements.txt`, including `streamlit`, `requests`, and `pytest`
 - Internet connection for fetching Eurostat data (manual-price calculations work without an API request)
 
@@ -252,7 +252,7 @@ python -m pytest -v
 python test_main.py
 ```
 
-**Last local verification (23 November 2026): 4 tests passed.**
+**Last local verification (25 November 2026): 4 tests passed using `python test_main.py`.**
 
 ### Testing documentation
 
