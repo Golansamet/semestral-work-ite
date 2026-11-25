@@ -191,11 +191,13 @@ st.markdown(
 
 
 def initialize(key, value):
+    """Set a default session-state value if the key is not already present."""
     if key not in st.session_state:
         st.session_state[key] = value
 
 
 def new_id():
+    """Return a unique numeric ID for a newly added appliance."""
     result = st.session_state["next_id"]
     st.session_state["next_id"] += 1
     return result
@@ -222,10 +224,12 @@ COUNTRIES = {"Czech Republic": "CZ", "Germany": "DE", "France": "FR"}
 
 
 def save_setting(from_widget, to_storage):
+    """Copy a widget value to its persistent session-state setting."""
     st.session_state[to_storage] = st.session_state[from_widget]
 
 
 def get_price():
+    """Return the active price per kWh and whether it uses Eurostat euros."""
     if (
         st.session_state["stored_mode"] == "Eurostat"
         and st.session_state["eurostat_price"] is not None
@@ -236,20 +240,24 @@ def get_price():
 
 
 def money(amount, euro):
+    """Format a monetary amount, adding EUR for Eurostat prices."""
     return f"EUR {amount:,.2f}" if euro else f"{amount:,.2f}"
 
 
 def kwh_for_month(item, hours=None):
+    """Estimate appliance consumption in kWh over a 30-day month."""
     hours = item["hours"] if hours is None else hours
     return calculate_consumption_for_days(item["power"], hours, 30)
 
 
 def sig(item):
+    """Return the appliance details used to validate a savings result."""
     return item["id"], item["power"], item["hours"]
 
 
 @st.dialog("Add an appliance")
 def appliance_dialog():
+    """Show a form for adding an appliance to the current session."""
     with st.form("create_appliance"):
         name = st.text_input("Appliance name", placeholder="e.g. Air conditioner")
         a, b = st.columns(2)
@@ -275,6 +283,7 @@ def appliance_dialog():
 
 
 def remove_device(device_id):
+    """Remove an appliance by ID and clear the previous savings result."""
     st.session_state["appliances"] = [
         a for a in st.session_state["appliances"] if a["id"] != device_id
     ]
@@ -284,6 +293,7 @@ def remove_device(device_id):
 
 
 def chart_html(appliances, price):
+    """Build HTML for a bar chart of the five highest appliance costs."""
     values = sorted(
         [(a["name"], kwh_for_month(a) * price) for a in appliances],
         key=lambda pair: pair[1], reverse=True,
@@ -317,6 +327,7 @@ def chart_html(appliances, price):
 
 
 def savings_widget(devices, current_price, euro):
+    """Display controls and results for reducing appliance usage hours."""
     st.markdown(
         '<div class="panel-head"><span>&#127807;</span> Potential Energy Savings</div>',
         unsafe_allow_html=True,
@@ -373,6 +384,7 @@ def savings_widget(devices, current_price, euro):
 
 
 def price_widget():
+    """Show manual and Eurostat electricity price selection controls."""
     st.markdown(
         '<div class="panel-head"><span>&#9889;</span> Electricity Price</div>',
         unsafe_allow_html=True,
@@ -481,6 +493,7 @@ def quick_calculator_dialog():
 
 
 def dashboard():
+    """Render the single-page energy dashboard and its interactive panels."""
     devices = st.session_state["appliances"]
     unit_price, euro = get_price()
     consumption = sum(kwh_for_month(device) for device in devices)
@@ -594,3 +607,4 @@ def dashboard():
 
 # All functionality is available on the dashboard. No top or side navigation.
 dashboard()
+
